@@ -1,0 +1,1676 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DLM Item Generator · ATLAS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=IBM+Plex+Mono:wght@300;400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --cream:    #f5f0e8;
+  --cream2:   #ede7d9;
+  --cream3:   #e0d8c8;
+  --ink:      #1a1610;
+  --ink2:     #3d3528;
+  --ink3:     #6b5f4a;
+  --ink4:     #9c8e78;
+  --rule:     #c8bfaa;
+  --accent:   #2d5a3d;
+  --accent2:  #4a8c60;
+  --accent3:  #c4733a;
+  --red:      #a83232;
+  --blue:     #2b4a7a;
+  --gold:     #b8862a;
+  --surface:  #faf7f2;
+  --shadow:   rgba(26,22,16,0.10);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--cream);
+  color: var(--ink);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 14px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── BACKGROUND TEXTURE ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 24px, rgba(26,22,16,0.03) 25px),
+    repeating-linear-gradient(90deg, transparent, transparent 24px, rgba(26,22,16,0.015) 25px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── HEADER ── */
+header {
+  position: relative;
+  z-index: 10;
+  background: var(--ink);
+  color: var(--cream);
+  padding: 18px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 3px solid var(--accent3);
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.brand-top {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent2);
+}
+
+.brand-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--cream);
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+.brand-title em {
+  color: var(--accent3);
+  font-style: italic;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-chip {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: var(--ink4);
+  background: var(--cream3);
+  border-radius: 2px;
+  padding: 4px 10px;
+  text-transform: uppercase;
+  color: var(--ink2);
+}
+
+/* ── LAYOUT ── */
+.layout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  flex: 1;
+  min-height: calc(100vh - 65px);
+}
+
+/* ── LEFT PANEL ── */
+.left {
+  background: var(--surface);
+  border-right: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  box-shadow: 2px 0 12px var(--shadow);
+}
+
+.panel-block {
+  padding: 22px 24px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.block-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink4);
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.block-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+/* ── SELECTS ── */
+.field { margin-bottom: 14px; }
+.field:last-child { margin-bottom: 0; }
+
+.field label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink3);
+  margin-bottom: 5px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
+select, input[type="text"], input[type="number"] {
+  width: 100%;
+  background: var(--cream);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  color: var(--ink);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  padding: 9px 12px;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  appearance: none;
+}
+
+select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 10 10'%3E%3Cpath fill='%236b5f4a' d='M5 7L0 2h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 30px;
+  cursor: pointer;
+}
+
+select:focus, input[type="text"]:focus, input[type="number"]:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(45,90,61,0.1);
+}
+
+/* ── NODE INFO CARD ── */
+.node-card {
+  background: var(--cream2);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+  padding: 14px;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.node-card-id {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--accent);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+.node-card-label {
+  font-family: 'Playfair Display', serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 6px;
+  line-height: 1.4;
+}
+
+.node-card-desc {
+  color: var(--ink3);
+  font-size: 12px;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.node-section-title {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--ink4);
+  margin-bottom: 5px;
+  margin-top: 8px;
+}
+
+.node-item {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 3px;
+  font-size: 11px;
+  color: var(--ink2);
+}
+
+.node-item-dot { color: var(--accent); flex-shrink: 0; }
+.node-item-dot.red { color: var(--red); }
+
+.vocab-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 4px;
+}
+
+.vocab-pill {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 2px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  color: var(--ink3);
+}
+
+/* ── 1-SHOT EXAMPLE SECTION ── */
+.example-section {
+  border-bottom: 1px solid var(--rule);
+}
+
+.example-toggle {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.example-toggle:hover { background: var(--cream2); }
+
+.example-toggle-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink4);
+  flex: 1;
+}
+
+.example-toggle-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  padding: 2px 7px;
+  border-radius: 2px;
+  background: var(--cream3);
+  border: 1px solid var(--rule);
+  color: var(--ink3);
+  letter-spacing: 0.05em;
+}
+
+.example-toggle-badge.active {
+  background: #2d5a3d18;
+  border-color: var(--accent2);
+  color: var(--accent);
+}
+
+.example-chevron {
+  color: var(--ink4);
+  transition: transform 0.2s;
+  flex-shrink: 0;
+}
+
+.example-chevron.open { transform: rotate(180deg); }
+
+.example-body {
+  display: none;
+  padding: 0 24px 20px;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.example-body.open { display: flex; }
+
+.example-body .field label {
+  color: var(--blue);
+}
+
+.example-hint {
+  font-size: 11px;
+  color: var(--ink4);
+  line-height: 1.6;
+  font-style: italic;
+  padding: 8px 12px;
+  background: var(--cream2);
+  border-left: 3px solid var(--rule);
+  border-radius: 0 4px 4px 0;
+}
+
+.example-body textarea {
+  min-height: 120px;
+  font-size: 12px;
+  line-height: 1.7;
+  resize: vertical;
+}
+
+/* ── STORY TEXTAREA ── */
+.story-area {
+  padding: 22px 24px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--rule);
+}
+
+.story-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.story-wordcount {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--ink4);
+}
+
+textarea {
+  flex: 1;
+  width: 100%;
+  min-height: 240px;
+  background: var(--cream);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  color: var(--ink);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  line-height: 1.75;
+  padding: 14px;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(45,90,61,0.1);
+}
+
+textarea::placeholder { color: var(--ink4); font-style: italic; }
+
+/* ── PARAMS ── */
+.params-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.range-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+input[type="range"] {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 3px;
+  background: var(--rule);
+  border-radius: 2px;
+  outline: none;
+  border: none;
+  padding: 0;
+  box-shadow: none;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--accent);
+  cursor: pointer;
+  border: 2px solid var(--surface);
+  box-shadow: 0 1px 4px var(--shadow);
+}
+
+.range-val {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  color: var(--accent);
+  min-width: 28px;
+  text-align: right;
+}
+
+/* ── GENERATE BUTTON ── */
+.generate-wrap {
+  padding: 20px 24px;
+}
+
+.gen-btn {
+  width: 100%;
+  padding: 14px;
+  background: var(--ink);
+  border: 2px solid var(--ink);
+  border-radius: 4px;
+  color: var(--cream);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.gen-btn::after {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 0;
+  background: var(--accent);
+  transition: width 0.3s ease;
+  z-index: 0;
+}
+
+.gen-btn span { position: relative; z-index: 1; }
+
+.gen-btn:hover::after { width: 100%; }
+.gen-btn:hover { border-color: var(--accent); }
+.gen-btn:active { transform: scale(0.985); }
+
+.gen-btn:disabled {
+  background: var(--rule);
+  border-color: var(--rule);
+  color: var(--ink4);
+  cursor: not-allowed;
+}
+
+.gen-btn:disabled::after { display: none; }
+
+/* ── RIGHT PANEL ── */
+.right {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* ── OUTPUT TOOLBAR ── */
+.out-toolbar {
+  background: var(--cream2);
+  border-bottom: 1px solid var(--rule);
+  padding: 12px 28px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.out-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink2);
+  font-style: italic;
+}
+
+.out-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 2px;
+  border: 1px solid var(--rule);
+  color: var(--ink4);
+}
+
+.out-spacer { flex: 1; }
+
+.toolbar-btn {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 3px;
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  color: var(--ink3);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  letter-spacing: 0.03em;
+}
+
+.toolbar-btn:hover {
+  background: var(--cream3);
+  border-color: var(--ink4);
+  color: var(--ink);
+}
+
+/* ── OUTPUT AREA ── */
+.out-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* ── EMPTY STATE ── */
+.empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: var(--ink4);
+  text-align: center;
+  padding: 60px;
+}
+
+.empty-ornament {
+  font-family: 'Playfair Display', serif;
+  font-size: 48px;
+  color: var(--rule);
+  line-height: 1;
+}
+
+.empty h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--ink3);
+  font-style: italic;
+}
+
+.empty p {
+  font-size: 13px;
+  max-width: 380px;
+  line-height: 1.8;
+  color: var(--ink4);
+}
+
+/* ── RESULTS HEADER ── */
+.results-header {
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--surface);
+  padding: 18px 22px;
+  margin-bottom: 20px;
+  animation: fadeUp 0.3s ease;
+}
+
+.results-ee {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.results-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--ink);
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.results-meta {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.meta-tag {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 2px;
+  border: 1px solid var(--rule);
+  color: var(--ink3);
+  background: var(--cream2);
+}
+
+.meta-tag.green { border-color: var(--accent2); color: var(--accent); }
+.meta-tag.amber { border-color: var(--gold); color: var(--gold); }
+
+/* ── ITEM CARDS ── */
+.item-card {
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  background: var(--surface);
+  margin-bottom: 14px;
+  overflow: hidden;
+  animation: fadeUp 0.35s ease both;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.item-card:nth-child(1) { animation-delay: 0.05s; }
+.item-card:nth-child(2) { animation-delay: 0.10s; }
+.item-card:nth-child(3) { animation-delay: 0.15s; }
+.item-card:nth-child(4) { animation-delay: 0.20s; }
+.item-card:nth-child(5) { animation-delay: 0.25s; }
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.item-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  background: var(--cream2);
+  border-bottom: 1px solid var(--rule);
+}
+
+.item-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: var(--cream);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.item-head-meta { flex: 1; }
+
+.item-skill {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink4);
+}
+
+.item-head-actions { display: flex; gap: 6px; }
+
+.icon-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 3px;
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  color: var(--ink4);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  transition: all 0.15s;
+}
+
+.icon-btn:hover { background: var(--cream3); color: var(--ink); border-color: var(--ink4); }
+
+.item-body { padding: 18px 20px; }
+
+.item-stem {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink);
+  line-height: 1.65;
+  margin-bottom: 14px;
+}
+
+.choices { display: flex; flex-direction: column; gap: 7px; }
+
+.choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 4px;
+  border: 1px solid var(--rule);
+  background: var(--cream);
+  font-size: 13px;
+  color: var(--ink3);
+  cursor: default;
+  transition: all 0.15s;
+}
+
+.choice.correct {
+  border-color: #2d5a3d80;
+  background: #2d5a3d0c;
+  color: var(--ink);
+}
+
+.choice-key {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--ink4);
+  min-width: 18px;
+  flex-shrink: 0;
+  padding-top: 1px;
+}
+
+.choice.correct .choice-key { color: var(--accent); }
+
+.correct-mark {
+  margin-left: auto;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--accent);
+  flex-shrink: 0;
+  padding-top: 2px;
+  letter-spacing: 0.05em;
+}
+
+.item-rationale {
+  margin-top: 12px;
+  padding: 10px 12px;
+  background: var(--cream2);
+  border-left: 3px solid var(--gold);
+  border-radius: 0 4px 4px 0;
+  font-size: 11px;
+  color: var(--ink3);
+  line-height: 1.65;
+  font-style: italic;
+}
+
+.item-rationale strong {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-style: normal;
+  display: block;
+  margin-bottom: 3px;
+}
+
+/* ── LOADING ── */
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 80px;
+  animation: fadeUp 0.3s ease;
+}
+
+.loading-bar-wrap {
+  width: 200px;
+  height: 3px;
+  background: var(--rule);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.loading-bar {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  animation: loadBar 1.8s ease-in-out infinite;
+}
+
+@keyframes loadBar {
+  0%   { width: 0%; margin-left: 0; }
+  50%  { width: 60%; margin-left: 20%; }
+  100% { width: 0%; margin-left: 100%; }
+}
+
+.loading-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  font-style: italic;
+  color: var(--ink3);
+}
+
+.loading-sub {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  color: var(--ink4);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ── ERROR ── */
+.error-card {
+  border: 1px solid #c5a0a0;
+  border-left: 3px solid var(--red);
+  background: #fdf5f5;
+  border-radius: 4px;
+  padding: 16px 18px;
+  font-size: 13px;
+  color: var(--red);
+  line-height: 1.6;
+  animation: fadeUp 0.3s ease;
+}
+
+.error-card strong {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  display: block;
+  margin-bottom: 5px;
+}
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--ink);
+  color: var(--cream);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  padding: 10px 18px;
+  border-radius: 3px;
+  z-index: 1000;
+  animation: fadeUp 0.2s ease;
+  pointer-events: none;
+  border-left: 3px solid var(--accent3);
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--ink4); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="brand-top">ATLAS · Dynamic Learning Maps</div>
+    <div class="brand-title">Test <em>Item</em> Generator</div>
+  </div>
+  <div class="header-right">
+    <span class="header-chip">ELA · Grades 11–12</span>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- ══════════════════════════════════
+       LEFT PANEL
+  ══════════════════════════════════ -->
+  <div class="left">
+
+    <!-- EE + LL Selection -->
+    <div class="panel-block">
+      <div class="block-label">Assessment Node</div>
+
+      <div class="field">
+        <label>Essential Element</label>
+        <select id="eeSelect" onchange="onSelectionChange()">
+          <option value="EE1">ELA.EE.RL.11-12.1 — Analyze text &amp; cite evidence</option>
+          <option value="EE2">ELA.EE.RL.11-12.2 — Recount events &amp; theme</option>
+          <option value="EE3">ELA.EE.RL.11-12.3 — Character/setting/event change</option>
+          <option value="EE4">ELA.EE.RL.11-12.4 — Words &amp; figurative language</option>
+          <option value="EE5">ELA.EE.RL.11-12.5 — Author's ending &amp; meaning</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Linkage Level</label>
+        <select id="llSelect" onchange="onSelectionChange()">
+          <option value="IP">Initial Precursor (IP)</option>
+          <option value="DP">Distal Precursor (DP)</option>
+          <option value="PP">Proximal Precursor (PP)</option>
+          <option value="T">Target (T)</option>
+          <option value="S">Successor (S)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Node Info -->
+    <div class="panel-block">
+      <div class="block-label">Node Specification</div>
+      <div class="node-card" id="nodeCard"></div>
+    </div>
+
+    <!-- 1-Shot Example -->
+    <div class="example-section" id="exampleSection">
+      <button class="example-toggle" onclick="toggleExample()" id="exampleToggleBtn">
+        <svg class="example-chevron" id="exampleChevron" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+        <span class="example-toggle-label">1-Shot Example</span>
+        <span class="example-toggle-badge" id="exampleBadge">Optional</span>
+      </button>
+      <div class="example-body" id="exampleBody">
+        <div class="example-hint">
+          Provide a sample story and its ideal test items. The model will use this as a concrete reference for the format, quality, and alignment you expect.
+        </div>
+        <div class="field">
+          <label>Example Story</label>
+          <textarea id="exampleStory" rows="6"
+            placeholder="Paste an example story here…"
+            oninput="updateExampleBadge()"></textarea>
+        </div>
+        <div class="field">
+          <label>Example Items</label>
+          <textarea id="exampleItems" rows="8"
+            placeholder="Paste the ideal items for the example story here, using the same ITEM 1 / ANSWER format…"
+            oninput="updateExampleBadge()"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Story Input -->
+    <div class="story-area">
+      <div class="block-label" style="margin-bottom:10px;">
+        Story Text
+        <span class="story-wordcount" id="wordCount">0 words</span>
+        <span style="flex:1;height:1px;background:var(--rule);display:block;margin-left:8px;"></span>
+      </div>
+      <textarea id="storyInput" rows="12"
+        placeholder="Paste or type the accessible story here. The AI will generate 5 test items aligned to the selected node's questions, vocabulary, and misconceptions."
+        oninput="updateWordCount()"></textarea>
+    </div>
+
+    <!-- Parameters -->
+    <div class="panel-block">
+      <div class="block-label">Generation Parameters</div>
+      <div class="params-grid">
+        <div class="field">
+          <label>Temperature</label>
+          <div class="range-row">
+            <input type="range" id="temperature" min="0" max="10" value="3"
+              oninput="document.getElementById('tempVal').textContent=(this.value/10).toFixed(1)">
+            <span class="range-val" id="tempVal">0.3</span>
+          </div>
+        </div>
+        <div class="field">
+          <label>Answer Choices</label>
+          <div class="range-row">
+            <input type="range" id="numChoices" min="2" max="4" value="3"
+              oninput="document.getElementById('choicesVal').textContent=this.value">
+            <span class="range-val" id="choicesVal">3</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Generate -->
+    <div class="generate-wrap">
+      <button class="gen-btn" id="genBtn" onclick="generate()">
+        <span>Generate 5 Test Items</span>
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </button>
+    </div>
+
+  </div><!-- /left -->
+
+  <!-- ══════════════════════════════════
+       RIGHT PANEL
+  ══════════════════════════════════ -->
+  <div class="right">
+    <div class="out-toolbar">
+      <span class="out-title" id="outTitle">Generated Items</span>
+      <span class="out-badge" id="outBadge">—</span>
+      <div class="out-spacer"></div>
+      <button class="toolbar-btn" onclick="copyAll()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copy All
+      </button>
+      <button class="toolbar-btn" onclick="clearOutput()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/></svg>
+        Clear
+      </button>
+    </div>
+
+    <div class="out-area" id="outArea">
+      <div class="empty" id="emptyState">
+        <div class="empty-ornament">❧</div>
+        <h2>Ready to Generate</h2>
+        <p>Paste a story into the left panel, select an Essential Element and Linkage Level, then click Generate. Five aligned test items will appear here.</p>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /layout -->
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// EECM DATA — verbatim from ATLAS EECM documents
+// ══════════════════════════════════════════════════════════════
+
+const EE_DATA = {
+  EE1: {
+    code: "ELA.EE.RL.11-12.1",
+    title: "Analyze a text to determine its meaning and cite textual evidence to support explicit and implicit understandings.",
+    essentialQuestions: [
+      "Can the student identify the explicit and implicit meanings of a text?",
+      "Can the student identify details from a text that support its explicit or implicit meaning?",
+      "Can the student cite information to support claims made about a text?"
+    ],
+    levels: {
+      IP: {
+        nodeId: "ELA-1214", nodeLabel: "Can identify concrete details in a familiar story (characters, objects)",
+        nodeDesc: "Can identify elements in a story (characters, other key details in the text) when asked.",
+        nodeObs: "When asked to recall a concrete detail about a character or object from a familiar story, the student is able to identify the correct detail from the story.",
+        questions: ["Can the student correctly identify characters or objects in a familiar story? (IP)", "Who is the boy in the story? (IP)"],
+        misconceptions: ["The student is unable to identify characters or objects in a familiar story. (IP)", "The student cannot recall concrete details from a familiar story. (IP)", "The student can recall details from a familiar story, but those details differ from those the student is asked to recall. (IP)"],
+        conceptVocab: "setting, character, and object identification", wordVocab: "wh words (who, what, where, when)"
+      },
+      DP: {
+        nodeId: "ELA-1183", nodeLabel: "Can identify details in a narrative to answer a question about explicit information",
+        nodeDesc: "Can find specific details in a narrative to answer questions asking about information explicitly stated in the narrative.",
+        nodeObs: "When provided with a narrative, the student can identify details to aid in answering a question about explicit information in the narrative.",
+        questions: ["Can the student identify explicit information in a narrative text?", "What happened when Sam kicked the ball?", "Who was running after the bus?"],
+        misconceptions: ["The student identifies a different detail from the text than what a question asks.", "The student chooses details that are unrelated to the text."],
+        conceptVocab: "detail identification, explicit information identification", wordVocab: "wh words (who, what, where, when)"
+      },
+      PP: {
+        nodeId: "ELA-1148", nodeLabel: "Can determine a narrative's explicit meaning",
+        nodeDesc: "Can analyze a narrative text to determine what is its explicit meaning based on the information directly stated in it.",
+        nodeObs: "After reading a narrative text, the student can correctly determine the explicit meaning of the text using information explicitly stated in the text.",
+        questions: ["Does the student recognize that some narratives have an explicit meaning?", "What did Beth do at the end of the story?", "What is the meaning of the story?"],
+        misconceptions: ["The student chooses an explicit meaning of the narrative that is related to a minor detail from the narrative.", "The student is unable to use explicit information from the narrative to determine the meaning of the narrative."],
+        conceptVocab: "explicit meaning identification, evidence citation", wordVocab: "meaning, how, what, where, sentence"
+      },
+      T: {
+        nodeId: "ELA-1336", nodeLabel: "Can analyze the explicit and implicit meanings of a narrative and cite textual evidence for them",
+        nodeDesc: "Can analyze the explicit and implicit meanings of a narrative and provide citations as evidence supporting each of the different meanings.",
+        nodeObs: "After reading a narrative, the student is able to identify details and citations from the narrative to support explicit and implicit meanings of the story.",
+        questions: ["Can the student identify specific details in a narrative text that support its implicit meaning?", "Choose the sentence that shows that being kind to people is important."],
+        misconceptions: ["The student cannot infer the meaning of a narrative text.", "The student identifies details and citations that are of less importance when ascertaining the meaning of the narrative."],
+        conceptVocab: "implicit meaning identification, implicit meaning/detail association, evidence citation", wordVocab: "meaning, choose, how, what, where, supports, information"
+      },
+      S: {
+        nodeId: "ELA-948", nodeLabel: "Can select strong textual evidence when citing a literature text",
+        nodeDesc: "Can determine when strong evidence is presented in a text and can use it when citing the text.",
+        nodeObs: "After reading a story, the student can identify the strongest textual evidence when citing the details that support an idea or claim found in the story.",
+        questions: ["Can the student identify which textual evidence is strong and which is weak in a literature text?", "Choose the sentence that shows Sam is excited about his new job."],
+        misconceptions: ["The student chooses minor details over strong, key points/evidence when citing evidence for a claim or idea made in a story.", "The student chooses details unrelated to the particular idea or claim in the story when citing evidence for the idea or claim."],
+        conceptVocab: "strong textual evidence identification, evidence citation", wordVocab: "strong, choose, sentence, meaning, supports, information"
+      }
+    }
+  },
+  EE2: {
+    code: "ELA.EE.RL.11-12.2",
+    title: "Recount the main events of the text which are related to the theme or central idea.",
+    essentialQuestions: [
+      "Can the student identify main events of a text?",
+      "Can the student identify the theme or central idea of a text?",
+      "Can the student identify the relationship between main events of a text and the theme or central idea?"
+    ],
+    levels: {
+      IP: {
+        nodeId: "F-176", nodeLabel: "Can identify actions associated with familiar routines",
+        nodeDesc: "As a result of experience with a routine, the student is able to identify actions associated with the routine.",
+        nodeObs: "The student can identify actions that are part of a familiar routine.",
+        questions: ["Can the student recognize specific actions present in a particular routine?", "What do you do at recess time?"],
+        misconceptions: ["The student identifies an action performed during an unrelated routine or activity.", "The student attends to other stimuli.", "The student does not respond."],
+        conceptVocab: "routine identification", wordVocab: "what, do"
+      },
+      DP: {
+        nodeId: "ELA-1344", nodeLabel: "Can identify the specific theme of a familiar story",
+        nodeDesc: "Can identify the theme of a familiar story, which includes a short, concise sentence about the overall meaning of the narrative.",
+        nodeObs: "After reading a familiar story, the student can identify a concise sentence that correctly reflects the overall meaning of the story.",
+        questions: ["Does the student recognize that a familiar story can have a theme? (DP)", "What is the theme of the story? (DP)"],
+        misconceptions: ["The student chooses a sentence that relates to a minor detail in the story. (DP)", "The student chooses a sentence that is unrelated to the story. (DP)"],
+        conceptVocab: "theme identification", wordVocab: "tell, theme, idea, what"
+      },
+      PP: {
+        nodeId: "ELA-1395", nodeLabel: "Can identify the relevant events contributing to the theme or central idea of a narrative",
+        nodeDesc: "Can determine the events that are relevant to the theme or central idea and help the reader to infer it.",
+        nodeObs: "When provided with a narrative, the student is able to determine what the theme or central idea of the narrative is and identify the relevant events that contribute to its thematic formation.",
+        questions: ["Does the student recognize that some events are more relevant to the theme or central idea of a narrative than others? (PP)", "Why did Laura work hard? (PP)", "What is the theme of the story? (PP)"],
+        misconceptions: ["The student chooses events from the text that are unrelated to the proposed theme or central idea. (PP)", "The student is unable to determine the theme of the story. (PP)"],
+        conceptVocab: "theme/detail association, theme/central idea/event association", wordVocab: "tell, events, theme, central idea, wh words (who, what, where, when, which)"
+      },
+      T: {
+        nodeId: "ELA-1439", nodeLabel: "Recount the main events of a story related to the theme",
+        nodeDesc: "The student can recount the most important events from a story.",
+        nodeObs: "After reading a story, the student is able to recall and identify the order of main events that relate to the theme of the story.",
+        questions: ["Can the student identify the relationship between main events in a story and the theme?", "What happened after Tom found the dog?", "What is the theme of the story?"],
+        misconceptions: ["The student recalls the main events of the story in the incorrect order.", "The student recalls the main events of the story in reverse chronological order.", "The student cannot determine how the events in the story relate to the theme."],
+        conceptVocab: "event recount, theme/event association", wordVocab: "event, theme, wh words (who, what, where, when, which)"
+      },
+      S: {
+        nodeId: "ELA-824", nodeLabel: "Analyze the development of a literature text's central idea or theme over the span of the text",
+        nodeDesc: "Can analyze the way the characters, setting, and plot contribute to the development of the theme across the course of a literature text.",
+        nodeObs: "After reading a story, the student can identify how the overall theme of the story develops over the course of the story through the characters, setting, and plot.",
+        questions: ["Can the student determine the ways in which dynamic story elements impact the thematic development of a literature text?", "How does Peter feel about moving at the beginning of the story?", "How does Peter feel about his new city at the end of the story?", "What does Peter learn about friendship?"],
+        misconceptions: ["The student chooses a central idea or theme that describes a minor detail from the text.", "The student cannot identify a change in the story or any development of the characters.", "The student identifies a change or development in the central idea or theme that is unrelated to the development of the central idea of the text."],
+        conceptVocab: "text progression, central idea/theme development, central idea/theme analysis", wordVocab: "central idea, theme, change"
+      }
+    }
+  },
+  EE3: {
+    code: "ELA.EE.RL.11-12.3",
+    title: "Determine how characters, the setting or events change over the course of the story or drama.",
+    essentialQuestions: [
+      "Can the student identify characters, settings, and events in a story or drama?",
+      "Does the student recognize that characters, settings, and events can change over the course of a story or drama?"
+    ],
+    levels: {
+      IP: {
+        nodeId: "F-139", nodeLabel: "Can draw conclusions based on category knowledge (early inductive reasoning)",
+        nodeDesc: "Using their categorical knowledge, can make generalizations about the category to novel instances of that category.",
+        nodeObs: "When presented with multiple pictures or objects, the student can identify the picture or object that is associated with the selected category.",
+        questions: ["Does the student understand that objects or pictures can be categorized?", "Show me the (category name)."],
+        misconceptions: ["The student indicates the unassociated object or picture.", "The student indicates both objects or pictures.", "The student attends to other stimuli.", "The student does not respond."],
+        conceptVocab: "category knowledge, early inductive reasoning", wordVocab: "group, what, which"
+      },
+      DP: {
+        nodeId: "ELA-354", nodeLabel: "Can identify the characters, setting, and major events of a story",
+        nodeDesc: "Can identify the key elements in a story, including the main characters, setting and the major events.",
+        nodeObs: "When reading a story, the student is able to correctly identify the major characters, settings, and events in the story.",
+        questions: ["Can the student identify characters, setting, and major events in a story?", "Where does Mary live?"],
+        misconceptions: ["The student cannot identify the major characters in the story.", "The student cannot identify the setting of the story.", "The student cannot identify events in the story."],
+        conceptVocab: "story element identification", wordVocab: "person, character, place, setting, major event, wh words (who, what, when, where)"
+      },
+      PP: {
+        nodeId: "ELA-1154", nodeLabel: "Can determine how a character develops or changes throughout a narrative",
+        nodeDesc: "Can determine the changes or development that occurs in a specific character in a narrative.",
+        nodeObs: "While reading a narrative, the student can identify how a specific character changes or develops over the span of the narrative.",
+        questions: ["Can the student provide evidence of how a character develops or changes throughout a narrative?", "How did Kristin feel about dogs at the beginning of the story?", "What happened to Kristin at the park?", "What did Kristin learn at the end of the story?"],
+        misconceptions: ["The student is unable to identify the correct character.", "The student identifies a change or development unrelated to the character.", "The student identifies a part of the story which remained stable over the span of the narrative."],
+        conceptVocab: "character development", wordVocab: "person, character, change, wh words (who, what, why), how"
+      },
+      T: {
+        nodeId: "ELA-1147", nodeLabel: "Can determine how the characters, settings, or events change over the course of a story or drama",
+        nodeDesc: "Can demonstrate an understanding of how the characters, settings, and events of a narrative progress or develop throughout the narrative.",
+        nodeObs: "After reading a story or drama, the student is able to identify how characters, settings, or events change over the span of the story or drama.",
+        questions: ["Does the student recognize that characters, settings, or events can change over the course of a story or drama?", "How was Leslie's room described at the beginning of the story?", "What did Leslie learn to do at the end of the story?"],
+        misconceptions: ["The student is not able to recognize how the character, setting, or events change over the span of the story or drama.", "The student identifies a change that was actually stable over the span of the story or drama."],
+        conceptVocab: "character, setting, and event development", wordVocab: "person, character, place, setting, major event, wh words (who, what, when, where, why), change"
+      },
+      S: {
+        nodeId: "ELA-827", nodeLabel: "Describe how the plot in a literary text unfolds and the resulting changes in the characters",
+        nodeDesc: "Can describe the series of episodes comprising the plot and how characters respond or change throughout them.",
+        nodeObs: "After reading a story, the student can determine a series of events that lay out the text's plot. The student is able to identify changes in characters as a result of these events in the story.",
+        questions: ["Can the student relate plot changes with changes in characters?", "What does Paul think about cats at the beginning of the story?", "What happened when Paul went to Washington?", "How does Paul change in the story?"],
+        misconceptions: ["The student is unable to identify changes or developments in the plot.", "The student attributes changes in a character to a different character in the text.", "The student attributes the source of changes in characters to incorrect events in the text."],
+        conceptVocab: "plot, character development, causal relationships", wordVocab: "person, character, place, setting, major event, wh words (who, what, when, where), change"
+      }
+    }
+  },
+  EE4: {
+    code: "ELA.EE.RL.11-12.4",
+    title: "Determine how words or phrases in a text, including words with multiple meanings and figurative language, impact the meaning.",
+    essentialQuestions: [
+      "Can the student identify words that have multiple meanings?",
+      "Can the student identify figurative language?",
+      "Does the student recognize that words or phrases impact the meaning of a text?"
+    ],
+    levels: {
+      IP: {
+        nodeId: "ELA-669", nodeLabel: "Can provide real-world connections between words and their use",
+        nodeDesc: "Can provide real-life examples of words connected to a use. / Can demonstrate an understanding of words with opposite meaning (e.g. cold, hot, up, down).",
+        nodeObs: "The student is able to relate words in the text to identify real-world connections. / When given context, the student is able to identify a word which has the opposite meaning of the target word.",
+        questions: ["Does the student recognize words in a text can have real-world connections? (IP)", "Can the student identify real-world connections to words in a text? (IP)", "Bethany is a young girl. Who else is young? (IP)"],
+        misconceptions: ["The student indicates a real-life example that is related to a different word from the text. (IP)", "The student indicates a real-life example that is unrelated to the text. (IP)", "The student attends to other stimuli. (IP)", "The student does not respond. (IP)"],
+        conceptVocab: "word/use association, opposite meanings", wordVocab: "descriptive words (e.g., soft, pointy, funny, spicy, sweet)"
+      },
+      DP: {
+        nodeId: "ELA-222", nodeLabel: "Can demonstrate an understanding that different words have similar meanings",
+        nodeDesc: "Can demonstrate an understanding that when two words have the same meaning, they are synonyms (the student may or may not explicitly use the term synonym, but this term should be used with the student).",
+        nodeObs: "While reading a text, the student can identify different words that have similar meanings.",
+        questions: ["Does the student recognize words that are similar in meaning?", "The blanket was soft. What word has a similar meaning as soft?"],
+        misconceptions: ["The student chooses a word with a similar meaning to a different word in the text.", "The student chooses a word with the opposite meaning to the proposed word."],
+        conceptVocab: "synonym recognition", wordVocab: "similar, same, meaning"
+      },
+      PP: {
+        nodeId: "ELA-1296", nodeLabel: "Can demonstrate an understanding that words have different uses in different contexts",
+        nodeDesc: "Can understand that words might have a slightly different meaning or use depending on the specific context in which they are used.",
+        nodeObs: "While reading a text, the student is able to use the surrounding context of the sentence and text to determine the appropriate meaning of the word as used in the particular sentence.",
+        questions: ["Does the student recognize that the context in which a word is used can give clues about its meaning?", "He was a sharp man. He knew exactly how to solve the problem. What does sharp mean?"],
+        misconceptions: ["The student is unable to recognize that a word has multiple meanings.", "The student is unable to determine the meaning of a word using surrounding context."],
+        conceptVocab: "word/context association, word meaning determination", wordVocab: "meaning, sentence, different"
+      },
+      T: {
+        nodeId: "ELA-1025", nodeLabel: "Can determine the meaning and impact of words and phrases as defined in a particular text",
+        nodeDesc: "Can determine the specific contextual meaning of a word or phrase as it is used in a single instance in a text or how it is gradually altered throughout the sentences, paragraphs, chapters, and sections of a text, regardless of whether the student may know the word in terms of its typical use.",
+        nodeObs: "After reading a text, the student can determine the meaning of unfamiliar words or phrases specifically included by the author to aid the student's understanding of the meaning of the text, and how the specific word choice influences the overall meaning of the text.",
+        questions: ["Can the student determine the contextual meaning and impact of words and phrases as defined in a particular text?", "Mom thought working at the store was something only an adult should do. What did Mom mean by this?"],
+        misconceptions: ["The student chooses words that do not influence the overall meaning of the text.", "The student does not understand the meaning of unfamiliar words or phrases or its overall impact on the text."],
+        conceptVocab: "word/context association, phrase/context association, word meaning determination, phrase meaning determination", wordVocab: "meaning, impact, effect"
+      },
+      S: {
+        nodeId: "ELA-1151", nodeLabel: "Can identify the mystery, tension, and surprise in a narrative",
+        nodeDesc: "Can identify the words and phrases used by a narrative's author to create mystery, tension, or surprise.",
+        nodeObs: "When reading a story, the student can identify details or events that create mystery, tension, or surprise in the story.",
+        questions: ["Can the student connect the mystery, tension, or surprise with specific words or phrases in a narrative?", "What is the surprise in the story?", "Why was Jill's mother surprised?"],
+        misconceptions: ["The student chooses an event in a narrative that does not create mystery, tension, or surprise.", "When given an event, the student is unable to correctly identify if the event creates mystery, tension, or surprise."],
+        conceptVocab: "story element identification", wordVocab: "mystery, tension, surprise"
+      }
+    }
+  },
+  EE5: {
+    code: "ELA.EE.RL.11-12.5",
+    title: "Determine how the author's choice of where to end the story contributes to the meaning.",
+    essentialQuestions: [
+      "Can the student identify the end of a story?",
+      "Can the student identify the meaning of a story?",
+      "Does the student recognize that the author's choice of where to end the story contributes to the meaning?"
+    ],
+    levels: {
+      IP: {
+        nodeId: "ELA-1213", nodeLabel: "Identify major observable events from a familiar story",
+        nodeDesc: "Can identify a major observable events in a familiar story.",
+        nodeObs: "When reading a familiar story, the student is able to recall and identify major observable events in the story.",
+        questions: ["Does the student recognize major observable events in a familiar story?", "Who gave the mouse a cookie?", "What happened after the boy went to sleep?"],
+        misconceptions: ["The student can identify major events in a familiar story but not recall them at a later time.", "The student cannot identify major events in a familiar story.", "The student cannot distinguish between a minor detail and major event."],
+        conceptVocab: "forward sequence of events", wordVocab: "wh words (who, what, where, when)"
+      },
+      DP: {
+        nodeId: "ELA-1180", nodeLabel: "Can identify the beginning, middle, and end of a story with a clear linear structure",
+        nodeDesc: "Can determine the events that come at the beginning, middle, and end of a narrative containing a clear and linear text structure. / Can describe the structure of a story by including major events at the beginning, middle, and end.",
+        nodeObs: "When provided with a narrative with a clear and linear text structure, the student is able to identify the events taking place at the beginning, middle, and end of a story. / After reading a story, the student can describe events from the beginning, middle, and end of the story.",
+        questions: ["Does the student recognize that a story has a beginning, middle, and end? (DP)", "When did Henry get a puppy? (DP)", "When did Tim go to the mall? (DP)"],
+        misconceptions: ["The student identifies an event in the story as taking place at the incorrect time in the story. (DP)", "The student is unable to identify the chronological order of events. (DP)"],
+        conceptVocab: "linear structure identification, event description", wordVocab: "beginning, middle, end, next, happen, wh words (who, what, where, when)"
+      },
+      PP: {
+        nodeId: "ELA-1361", nodeLabel: "Determine how structure contributes to the meaning of a story",
+        nodeDesc: "Student determines how structure contributes to the meaning of a story. / Student can use information about structure to make determinations about what comes next in a text.",
+        nodeObs: "After reading a story, the student is able to use story elements and the organization of the story to aid in understanding the overall meaning and understand how these elements contribute to the meaning of the story.",
+        questions: ["Does the student recognize that a story's structure may influence the story's meaning? (PP)", "What did Sam learn at the end of the story? (PP)", "What is the meaning of the story? (PP)"],
+        misconceptions: ["The student cannot identify story elements or recall the order of events to aid in the understanding of the text. (PP)", "The student is unable to determine the meaning of the text. (PP)", "The student cannot determine how the different elements of the story (e.g., plot, conflict, resolution) contribute to the meaning of the text. (PP)"],
+        conceptVocab: "text structure identification, text structure/meaning association, story, poem, drama", wordVocab: "meaning, structure, story elements (character, theme, problem, etc.)"
+      },
+      T: {
+        nodeId: "ELA-1146", nodeLabel: "Can determine how the author's choice of a narrative's ending will impact its meaning",
+        nodeDesc: "Can determine that how an author ends a story will impact the meaning of the narrative.",
+        nodeObs: "After reading a narrative, the student can ascertain information about the meaning of the narrative through the author's choice of where to end a narrative.",
+        questions: ["Does the student recognize that an author's choice of a narrative's ending can impact its meaning?", "How does the story end?", "What is the meaning of the story?"],
+        misconceptions: ["The student is unable to determine the meaning of the story.", "The student does not understand the author's choice for ending the narrative the way he/she did.", "The student ascertains incorrect information about the meaning of the narrative through the author's choice of where to end a narrative."],
+        conceptVocab: "ending/meaning association, causal relationships", wordVocab: "ending, meaning, author, choice"
+      },
+      S: {
+        nodeId: "ELA-953", nodeLabel: "Compare and contrast how structure contributes to meaning across multiple texts",
+        nodeDesc: "Can compare and contrast how meaning and style is transferred across multiple texts based on their text structure.",
+        nodeObs: "After reading two or more texts, the student is able to use story elements, text features and the organizational patterns of the texts to aid in understanding the overall meanings of the texts in order to compare and contrast how these elements contribute to the meaning of the texts.",
+        questions: ["What does the first text have?", "What does the second text have?", "What is the meaning of the two texts?"],
+        misconceptions: ["The student attributes the incorrect structure to the texts.", "The student cannot determine the meaning of one or both texts.", "The student incorrectly identifies similarities and/or differences in structure and meaning across two texts."],
+        conceptVocab: "text structure/meaning association, comparison, contrast", wordVocab: "similar, same, different, meaning, structure, story elements, fact, argument, claim"
+      }
+    }
+  }
+};
+
+const LL_NAMES = { IP: "Initial Precursor", DP: "Distal Precursor", PP: "Proximal Precursor", T: "Target", S: "Successor" };
+
+// ══════════════════════════════════════════════════════════════
+// UI
+// ══════════════════════════════════════════════════════════════
+
+function onSelectionChange() {
+  renderNodeCard();
+}
+
+function renderNodeCard() {
+  const ee = document.getElementById('eeSelect').value;
+  const ll = document.getElementById('llSelect').value;
+  const data = EE_DATA[ee];
+  const level = data.levels[ll];
+
+  document.getElementById('nodeCard').innerHTML = `
+    <div class="node-card-id">${level.nodeId} · ${LL_NAMES[ll]}</div>
+    <div class="node-card-label">${level.nodeLabel}</div>
+    <div class="node-card-desc">${level.nodeDesc}</div>
+    <div class="node-section-title">Node Observation</div>
+    <div class="node-card-desc">${level.nodeObs}</div>
+    <div class="node-section-title">Concepts &amp; Words</div>
+    <div class="vocab-pills">
+      ${level.wordVocab.split(',').map(w => '<span class="vocab-pill">' + w.trim() + '</span>').join('')}
+    </div>
+    <div class="node-section-title">Questions to Ask</div>
+    ${level.questions.map(q => '<div class="node-item"><span class="node-item-dot">›</span><span>' + q + '</span></div>').join('')}
+    <div class="node-section-title">Misconceptions</div>
+    ${level.misconceptions.map(m => '<div class="node-item"><span class="node-item-dot red">›</span><span>' + m + '</span></div>').join('')}
+  `;
+}
+
+function updateWordCount() {
+  const text = document.getElementById('storyInput').value.trim();
+  const count = text ? text.split(/\s+/).length : 0;
+  document.getElementById('wordCount').textContent = count + ' words';
+}
+
+// ══════════════════════════════════════════════════════════════
+// GENERATION
+// ══════════════════════════════════════════════════════════════
+
+async function generate() {
+  const storyText = document.getElementById('storyInput').value.trim();
+  if (!storyText) { showToast('Please paste a story first.'); return; }
+
+  const ee = document.getElementById('eeSelect').value;
+  const ll = document.getElementById('llSelect').value;
+  const data = EE_DATA[ee];
+  const level = data.levels[ll];
+  const llName = LL_NAMES[ll];
+  const temperature = parseFloat(document.getElementById('temperature').value) / 10;
+  const numChoices = parseInt(document.getElementById('numChoices').value);
+
+  const btn = document.getElementById('genBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span>Generating…</span>';
+
+  const outArea = document.getElementById('outArea');
+  document.getElementById('emptyState')?.remove();
+
+  const loader = document.createElement('div');
+  loader.className = 'loading-state';
+  loader.id = 'loader';
+  loader.innerHTML = `
+    <div class="loading-bar-wrap"><div class="loading-bar"></div></div>
+    <div class="loading-text">Generating test items…</div>
+    <div class="loading-sub">${data.code} · ${llName} · ${level.nodeId}</div>
+  `;
+  outArea.appendChild(loader);
+
+  const systemPrompt = buildSystemPrompt(data, level, llName, numChoices);
+  const userPrompt = buildUserPrompt(storyText, data, level, llName, numChoices);
+
+  try {
+    const isLocal = location.hostname === 'localhost' || location.hostname === '127.0.0.1';
+    const endpoint = isLocal
+      ? 'http://localhost:3000/v1/messages'
+      : 'https://api.anthropic.com/v1/messages';
+
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 3000,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: userPrompt }],
+        temperature
+      })
+    });
+
+    if (!response.ok) {
+      const err = await response.json();
+      throw new Error(err.error?.message || 'API error ' + response.status);
+    }
+
+    const result = await response.json();
+    const rawText = result.content.map(b => b.text || '').join('');
+
+    loader.remove();
+    renderItems(rawText, data, level, llName);
+
+  } catch (err) {
+    loader.remove();
+    const errEl = document.createElement('div');
+    errEl.className = 'error-card';
+    errEl.innerHTML = '<strong>⚠ Generation Error</strong>' + escHtml(err.message);
+    outArea.appendChild(errEl);
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '<span>Generate 5 Test Items</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+}
+
+function buildSystemPrompt(data, level, llName, numChoices) {
+  return `You are an expert test item developer for the Dynamic Learning Maps (DLM) alternate assessment system. You create accessible multiple-choice test items for students with significant cognitive disabilities (SCD) in Grades 11–12.
+
+You will be given a story and must generate exactly 5 test items based on it, precisely aligned to the specified Essential Element and Linkage Level node.
+
+ESSENTIAL ELEMENT: ${data.code}
+EE TITLE: ${data.title}
+
+LINKAGE LEVEL: ${llName} (node: ${level.nodeId})
+NODE LABEL: ${level.nodeLabel}
+NODE DESCRIPTION: ${level.nodeDesc}
+NODE OBSERVATION: ${level.nodeObs}
+
+VOCABULARY CONCEPTS: ${level.conceptVocab}
+VOCABULARY WORDS: ${level.wordVocab}
+
+QUESTIONS TO ASK (base your item stems on these patterns):
+${level.questions.map(q => '- ' + q).join('\n')}
+
+COMMON MISCONCEPTIONS (design distractors to probe these):
+${level.misconceptions.map(m => '- ' + m).join('\n')}
+
+ITEM WRITING RULES:
+- Generate exactly 5 items, each with ${numChoices} answer choices (labeled A, B${numChoices >= 3 ? ', C' : ''}${numChoices >= 4 ? ', D' : ''})
+- Each item must be answerable using information explicitly stated in the provided story
+- Use simple vocabulary aligned to the linkage level's word list
+- Question stems must be short, clear, and unambiguous
+- Exactly one answer choice must be correct; all others must be plausible distractors drawn from the story but clearly incorrect upon careful reading
+- Distractors should target the listed misconceptions where possible
+- Do NOT repeat the same question type across all 5 items — vary the stems
+
+OUTPUT FORMAT — use this exact structure for each item, with no extra text between items:
+
+ITEM 1: [question stem]
+A) [choice]
+B) [choice]${numChoices >= 3 ? '\nC) [choice]' : ''}${numChoices >= 4 ? '\nD) [choice]' : ''}
+ANSWER: [correct letter] — [one sentence rationale explaining why this is correct and how it aligns to the node]
+
+ITEM 2: ...
+(continue through ITEM 5)`;
+}
+
+function buildUserPrompt(storyText, data, level, llName, numChoices) {
+  const exStory = (document.getElementById('exampleStory')?.value || '').trim();
+  const exItems = (document.getElementById('exampleItems')?.value || '').trim();
+
+  let exampleBlock = '';
+  if (exStory && exItems) {
+    exampleBlock = `
+EXAMPLE — use the following as a model for quality, format, and alignment:
+
+EXAMPLE STORY:
+${exStory}
+
+EXAMPLE ITEMS:
+${exItems}
+
+END OF EXAMPLE
+`;
+  }
+
+  return `Please generate 5 test items for the following story, aligned to the ${llName} linkage level node ${level.nodeId} (${level.nodeLabel}) of ${data.code}.
+${exampleBlock}
+STORY TO USE FOR YOUR ITEMS:
+${storyText}
+
+Remember:
+- All 5 items must be directly answerable from this story
+- Use vocabulary appropriate to this linkage level: ${level.wordVocab}
+- Vary item stems across the 5 items
+- Each item has exactly ${numChoices} choices with exactly 1 correct answer
+- Follow the exact output format specified`;
+}
+
+// ══════════════════════════════════════════════════════════════
+// RENDER
+// ══════════════════════════════════════════════════════════════
+
+function renderItems(rawText, data, level, llName) {
+  const outArea = document.getElementById('outArea');
+
+  // Update toolbar
+  document.getElementById('outTitle').textContent = data.code + ' · ' + llName;
+  document.getElementById('outBadge').textContent = level.nodeId;
+
+  // Results header
+  const header = document.createElement('div');
+  header.className = 'results-header';
+  header.innerHTML = `
+    <div class="results-ee">${data.code}</div>
+    <div class="results-title">${level.nodeLabel}</div>
+    <div class="results-meta">
+      <span class="meta-tag green">${llName}</span>
+      <span class="meta-tag">${level.nodeId}</span>
+      <span class="meta-tag amber">5 items</span>
+      <span class="meta-tag">Vocab: ${level.wordVocab}</span>
+    </div>
+  `;
+  outArea.appendChild(header);
+
+  // Parse and render each item
+  const items = parseItems(rawText);
+
+  if (items.length === 0) {
+    const fallback = document.createElement('div');
+    fallback.className = 'error-card';
+    fallback.style.color = 'var(--ink3)';
+    fallback.style.borderLeftColor = 'var(--gold)';
+    fallback.innerHTML = '<strong>Raw Output</strong><pre style="white-space:pre-wrap;font-size:12px;font-family:\'IBM Plex Mono\',monospace;line-height:1.6;">' + escHtml(rawText) + '</pre>';
+    outArea.appendChild(fallback);
+    return;
+  }
+
+  const container = document.createElement('div');
+  container.id = 'itemsContainer';
+  items.forEach((item, i) => {
+    const card = document.createElement('div');
+    card.className = 'item-card';
+
+    const choicesHtml = item.choices.map(c => `
+      <div class="choice ${c.correct ? 'correct' : ''}">
+        <span class="choice-key">${c.key})</span>
+        <span>${escHtml(c.text)}</span>
+        ${c.correct ? '<span class="correct-mark">✓ correct</span>' : ''}
+      </div>`).join('');
+
+    const rationaleHtml = item.rationale
+      ? `<div class="item-rationale"><strong>Rationale</strong>${escHtml(item.rationale)}</div>`
+      : '';
+
+    card.innerHTML = `
+      <div class="item-head">
+        <div class="item-num">${i + 1}</div>
+        <div class="item-head-meta">
+          <div class="item-skill">${data.code} · ${llName} · ${level.nodeId}</div>
+        </div>
+        <div class="item-head-actions">
+          <button class="icon-btn" onclick="copyItem(this)" title="Copy item">📋</button>
+        </div>
+      </div>
+      <div class="item-body">
+        <div class="item-stem">${escHtml(item.stem)}</div>
+        <div class="choices">${choicesHtml}</div>
+        ${rationaleHtml}
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  outArea.appendChild(container);
+}
+
+function parseItems(text) {
+  const items = [];
+  const itemRegex = /ITEM\s*(\d+)\s*[:\-–]?\s*([^\n]+)\n((?:[A-D]\)\s*[^\n]+\n?)+)ANSWER\s*:\s*([A-D])\s*[—\-–]\s*([^\n]*)/gi;
+
+  let match;
+  while ((match = itemRegex.exec(text)) !== null) {
+    const stem = match[2].trim();
+    const choicesRaw = match[3];
+    const answerKey = match[4].trim().toUpperCase();
+    const rationale = match[5].trim();
+
+    const choiceLines = choicesRaw.match(/[A-D]\)\s*[^\n]+/g) || [];
+    const choices = choiceLines.map(c => {
+      const key = c[0].toUpperCase();
+      const choiceText = c.replace(/^[A-D]\)\s*/, '').trim();
+      return { key, text: choiceText, correct: key === answerKey };
+    });
+
+    if (stem && choices.length >= 2) {
+      items.push({ stem, choices, rationale });
+    }
+  }
+
+  return items;
+}
+
+// ══════════════════════════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════════════════════════
+
+function escHtml(str) {
+  return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function copyAll() {
+  const container = document.getElementById('itemsContainer');
+  if (!container) { showToast('Nothing to copy yet.'); return; }
+  navigator.clipboard.writeText(container.innerText).then(() => showToast('✓ All items copied'));
+}
+
+function copyItem(btn) {
+  const card = btn.closest('.item-card');
+  navigator.clipboard.writeText(card.innerText).then(() => showToast('✓ Item copied'));
+}
+
+function clearOutput() {
+  const outArea = document.getElementById('outArea');
+  outArea.innerHTML = `
+    <div class="empty" id="emptyState">
+      <div class="empty-ornament">❧</div>
+      <h2>Ready to Generate</h2>
+      <p>Paste a story into the left panel, select an Essential Element and Linkage Level, then click Generate. Five aligned test items will appear here.</p>
+    </div>`;
+  document.getElementById('outTitle').textContent = 'Generated Items';
+  document.getElementById('outBadge').textContent = '—';
+}
+
+let toastTimer;
+function showToast(msg) {
+  document.querySelector('.toast')?.remove();
+  clearTimeout(toastTimer);
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.textContent = msg;
+  document.body.appendChild(t);
+  toastTimer = setTimeout(() => t.remove(), 2500);
+}
+
+function toggleExample() {
+  const body = document.getElementById('exampleBody');
+  const chevron = document.getElementById('exampleChevron');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chevron.classList.toggle('open', !isOpen);
+}
+
+function updateExampleBadge() {
+  const exStory = (document.getElementById('exampleStory')?.value || '').trim();
+  const exItems = (document.getElementById('exampleItems')?.value || '').trim();
+  const badge = document.getElementById('exampleBadge');
+  if (exStory && exItems) {
+    badge.textContent = '✓ Active';
+    badge.classList.add('active');
+  } else if (exStory || exItems) {
+    badge.textContent = 'Incomplete';
+    badge.classList.remove('active');
+  } else {
+    badge.textContent = 'Optional';
+    badge.classList.remove('active');
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════════
+renderNodeCard();
+</script>
+</body>
+</html>
