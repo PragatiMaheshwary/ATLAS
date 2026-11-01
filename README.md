@@ -1,5 +1,5 @@
 # ATLAS
-HTML code for DLM item generators
+HTML code for item generation for Dynamic Learning Maps Testlest (https://dynamiclearningmaps.org/). Creation funded from ATLAS Research Fellowship.
 
 Please use your own API key as needed in case I forgot to remove mine.
 
